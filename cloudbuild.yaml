@@ -1,0 +1,31 @@
+ steps:
+ # Build the container image
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '-t', 'gcr.io/capstone-skincheckai/flek-detection-service', '.']
+ # Push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'gcr.io/capstone-skincheckai/flek-detection-service']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+   entrypoint: gcloud
+   args:
+   - 'run'
+   - 'deploy'
+   - 'flek-detection-service'
+   - '--image'
+   - 'gcr.io/capstone-skincheckai/flek-detection-service'
+   - '--port'
+   - '8080'
+   - '--service-account=flek-detection-service-acco@capstone-skincheckai.iam.gserviceaccount.com'
+   - '--memory'
+   - '1Gi'
+#    delete the line below if you want auth (using gcloud iap)
+   - '--allow-unauthenticated'
+   - '--region'
+   - 'asia-southeast2'
+   - '--set-env-vars'
+   - 'PROJECT_ID=capstone-skincheckai'
+   - '--set-env-vars'
+   - 'BUCKET_URL=https://storage.googleapis.com/public-picture-media-bucket'
+ images:
+ - 'gcr.io/capstone-skincheckai/flek-detection-service'
