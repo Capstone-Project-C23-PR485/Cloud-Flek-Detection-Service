@@ -49,10 +49,10 @@ def detect_wrinkle(data, model):
 
         if confidence > 0.8:
             label = 'You have Flek'
-            color = (0, 0, 255)  # BGR format for red color
+            color = (255, 0, 0)
         else:
             label = 'You do not have flek'
-            color = (0, 255, 0)  # BGR format for green color
+            color = (100, 255, 0)
     except Exception as e:
         print(f"Exception when predicting image. Error : {e}")
         raise Exception("Error when predicting image")
@@ -83,7 +83,7 @@ def detect_wrinkle(data, model):
 def upload_to_gcs(bucket_name, image_result, file_name):
     # gcs_bucket_name = 'public-picture-media-bucket'
     image_result = cv2.imwrite(f'static/{file_name}', image_result)
-    destination_blob_name = f'images_result/wrinkle-{file_name}'
+    destination_blob_name = f'images_result/flek-{file_name}'
     storage_client = storage.Client(os.getenv('PROJECT_ID'))
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
@@ -99,8 +99,8 @@ def post_request(file_name, confidence, result, file_path):
           "confidence": confidence, 
           "result": result
           },
-      "image": f"{gcs_bucket_url}/wrinkle-{file_name}",
-      "model": "wrinkle"
+      "image": f"{gcs_bucket_url}/flek-{file_name}",
+      "model": "flek"
     }
 
     response = requests.post('https://skincheckai-api-b6zefxgbfa-et.a.run.app/machine-learning/report-analyses', json=data)
