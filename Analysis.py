@@ -48,10 +48,10 @@ def detect_wrinkle(data, model):
         confidence = result[0][0]
 
         if confidence > 0.8:
-            label = 'You have Flek'
+            label = 'Flecked'
             color = (255, 0, 0)
         else:
-            label = 'You do not have flek'
+            label = 'No Flek'
             color = (100, 255, 0)
     except Exception as e:
         print(f"Exception when predicting image. Error : {e}")
